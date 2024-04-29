@@ -1,3 +1,0 @@
-#Code!
-
-print("Hellow World!")

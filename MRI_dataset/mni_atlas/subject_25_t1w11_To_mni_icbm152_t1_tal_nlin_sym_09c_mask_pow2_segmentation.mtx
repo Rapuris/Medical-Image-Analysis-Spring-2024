@@ -1,0 +1,23 @@
+4
+4
+0.9999139 0.0121910395 0.004861885 7.015876 
+-0.01080947 0.97503966 -0.22176747 32.23815 
+-0.0074441065 0.22169581 0.97508746 -97.053375 
+0.0 0.0 0.0 1.0 
+
+Have transform parameters
+0
+1.0
+1.0
+1.0
+192
+224
+192
+true
+false
+false
+Using cost function, NORMALIZED_MUTUAL_INFORMATION_SMOOTHED, the cost is 0.9432452214197942.
+Some registration settings: 
+X Rotations from -30.0 to 30.0, with a X coarse rate of 15.0 and X fine rate of 6.0.
+Y Rotations from -30.0 to 30.0, with a Y coarse rate of 15.0 and Y fine rate of 6.0.
+Z Rotations from -30.0 to 30.0, with a Z coarse rate of 15.0 and Z fine rate of 6.0.

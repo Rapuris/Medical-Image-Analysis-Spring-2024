@@ -1,0 +1,23 @@
+4
+4
+0.9997624 -0.0041986015 0.02138963 -34.627266 
+0.0067725917 0.9925405 -0.12172724 -14.405432 
+-0.02071899 0.12184318 0.9923331 -5.3477416 
+0.0 -0.0 0.0 1.0 
+
+Have transform parameters
+0
+1.0
+1.0
+1.0
+192
+224
+192
+true
+false
+false
+Using cost function, null, the cost is 0.8715142128763691.
+Some registration settings: 
+X Rotations from -30.0 to 30.0, with a X coarse rate of 15.0 and X fine rate of 6.0.
+Y Rotations from -30.0 to 30.0, with a Y coarse rate of 15.0 and Y fine rate of 6.0.
+Z Rotations from -30.0 to 30.0, with a Z coarse rate of 15.0 and Z fine rate of 6.0.

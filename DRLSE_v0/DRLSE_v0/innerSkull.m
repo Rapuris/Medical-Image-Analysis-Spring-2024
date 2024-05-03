@@ -42,22 +42,48 @@ g = imdiffusefilt(g);
 % hold off
 
 for k=1:iter
-    % phi=NeumannBoundCond(phi);
-    % [phi_x,phi_y]=gradient(phi);
-    % s=sqrt(phi_x.^2 + phi_y.^2);
-    % smallNumber=1e-10;  
-    % Nx=phi_x./(s+smallNumber); % add a small positive number to avoid division by zero
-    % Ny=phi_y./(s+smallNumber);
-    % curvature=div(Nx,Ny);
+    phi=NeumannBoundCond(phi);
+    [phi_x,phi_y]=gradient(phi);
+    s=sqrt(phi_x.^2 + phi_y.^2);
+    smallNumber=1e-10;  
+    Nx=phi_x./(s+smallNumber); % add a small positive number to avoid division by zero
+    Ny=phi_y./(s+smallNumber);
+    curvature=div(Nx,Ny);
 
+    % if mod(k, 5) == 0
+        % % {SHOW GRADIENT MAP %}
+        % x = 1:size(phi, 2);
+        % y = 1:size(phi, 1);
+        % figure
+        % contour(phi_x,phi_y,x.*g)
+        % hold on
+        % quiver(x,y,phi_x,phi_y)
+        % hold off
+    % end
     regularTerm=adaptedLevelSet(phi, vx, vy);  % MY FXN
-
     % diracPhi=Dirac(phi,epsilon);
+    edgeTerm = findEdgeTerm(phi, curvature);  % MY FXN
+
     % areaTerm=diracPhi.*g; % balloon/pressure force
-    % edgeTerm=diracPhi.*(vx.*Nx+vy.*Ny) + diracPhi.*g.*curvature;
-    % phi=phi + timestep*(lambda*edgeTerm + alfa*areaTerm);
-    phi=phi + timestep*(mu*regularTerm);
+    % edgeTerm= diracPhi.*(vx.*Nx+vy.*Ny) + diracPhi.*g.*curvature;
+    % edgeTerm = diracPhi.*edgeTerm;
+    % delta_phi = edgeTerm .* (1 - regularTerm);
+    % phi=phi + timestep*(delta_phi);
+    phi=phi + timestep*(edgeTerm + regularTerm);
 end
+
+function f = findEdgeTerm(phi, curvature)
+    % Initialize f with zeros, assuming curvature is a matrix
+    f = zeros(size(curvature));
+    % Create a mask for pixels near the level set
+    nearLevelSet = abs(phi) < 1.5;
+    % Apply logistic sigmoid to curvature values near the level set
+    f(nearLevelSet) = logsig(curvature(nearLevelSet));
+    % Apply a Gaussian filter to the entire field
+    % Filtering here is done to the whole matrix but mainly affects regions where f was modified
+    f = imgaussfilt(f, 1);
+
+
 
 function f = adaptedLevelSet(phi, vx, vy)
 %{ updated part to set negative gradients to 0%}
@@ -73,21 +99,13 @@ vecY = Y - center(1);
 dotProduct = vecX .* vx + vecY .* vy;
 
 % Initialize force function f
-contour = abs(phi) < 1;
+contour = abs(phi) < 1.5;
 
-% Alternatively, if the contour is not exactly zero but includes a transition around zero:
-% contour = bwperim(phi > 0); % This might be necessary if phi smoothly transitions through zero
-
-% Dilate the contour using an 8-connected structuring element
-se = strel('square', 3); % 3x3 square structuring element for 8-connectivity
-dilatedContour = imdilate(contour, se);
-
-% Initialize force function f to the minimum value for int32
 f = zeros(size(phi));  % Set everything to zero
-f(dilatedContour) = 1;  % Set only dilated contour areas to one
+f(contour) = 1;  % Set only dilated contour areas to one
     
 % Define shrinking factor when dot product is negative
-shrink_factor = -1;  % You can adjust this value based on desired speed or sensitivity of contraction
+shrink_factor = 1;  % You can adjust this value based on desired speed or sensitivity of contraction
 log_response = f.*logsig(dotProduct * shrink_factor);
 log_response = imgaussfilt(log_response, 1);   
 f = log_response;

@@ -63,7 +63,7 @@ for frame = 1:size(Img, 3)
     
     end
 
-    % % {SHOW GRADIENT MAP %}
+    % {SHOW GRADIENT MAP %}
     % [vx, vy] = gradient(Img_frame);
     % vx = imgaussfilt(vx, 2);
     % vy = imgaussfilt(vy, 2);
@@ -78,28 +78,22 @@ for frame = 1:size(Img, 3)
 
     % Assume phi is your initial level set function
 
-    % % Binary image of the zero level set
-    % binaryImg = phi <= 0;
+    % Binary image of the zero level set
+    binaryImg = phi <= 0;
 
-    % % Compute distance from the zero level set
-    % insideDist = bwdist(~binaryImg)*5;  % Distance outside the zero level set
-    % outsideDist = bwdist(binaryImg)*5;  % Distance inside the zero level set
+    % Compute distance from the zero level set
+    insideDist = bwdist(~binaryImg);  % Distance outside the zero level set
+    outsideDist = bwdist(binaryImg);  % Distance inside the zero level set
 
-    % % % Define the decay rate
-    % % lambda = 0.1;  % Adjust this value to control the rate of exponential decay
+    % Create signed distance function
+    % Assign negative to inside distances, positive to outside distances
+    initialLSF = outsideDist - insideDist;
 
-    % % % Apply exponential decay to the inside distances
-    % % insideDist = exp(-lambda * insideDist);
+    % Correct the signs according to the initial phi
+    initialLSF(phi < 0) = -insideDist(phi < 0);
+    initialLSF(phi > 0) = outsideDist(phi > 0);
 
-    % % Create signed distance function
-    % % Assign negative to inside distances, positive to outside distances
-    % initialLSF = outsideDist - insideDist;
-
-    % % Correct the signs according to the initial phi
-    % initialLSF(phi < 0) = -insideDist(phi < 0);
-    % initialLSF(phi > 0) = outsideDist(phi > 0);
-
-    % phi = initialLSF;
+    phi = initialLSF;
 
     % % Visualize the signed distance function
     % figure;
@@ -124,7 +118,7 @@ for frame = 1:size(Img, 3)
         %     axis off;
         % end
 
-        phi = innerSkull(phi, Img_frame, lambda, mu, alfa, epsilon, timestep, iter_inner);
+        phi = innerSkull(phi, Img_smooth, lambda, mu, alfa, epsilon, timestep, iter_inner);
         % Plot the updated contour
         imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
         hContour = contour(phi, [0, 0], 'r', 'LineWidth', 2);

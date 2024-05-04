@@ -51,19 +51,24 @@ for frame = 1:size(Img, 3)
     % Set values inside the rectangle to -c0
     initialLSF(y >= rectY(1) & y <= rectY(2) & x >= rectX(1) & x <= rectX(2)) = -c0;
 
-
-
-
-
     % The initialized phi is now set from the modified initialLSF
     phi = initialLSF;
+
+    % % Plot the updated contour
+    % imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
+    % hContour = contour(phi, [0, 0], 'r', 'LineWidth', 2);
+    % % Update title
+    % title('Initial level contour');
+    % % Refresh figure window to show updates
+    % drawnow;
+
     % Level set evolution for FINDING OUTER SKULL
     for n=1:iter_outer
         phi = drlse_edge(phi, g, lambda, mu, alfa, epsilon, timestep, iter_inner, 'double-well');
     
     end
 
-    % {SHOW GRADIENT MAP %}
+    % % {SHOW GRADIENT MAP %}
     % [vx, vy] = gradient(Img_frame);
     % vx = imgaussfilt(vx, 2);
     % vy = imgaussfilt(vy, 2);
@@ -73,6 +78,7 @@ for frame = 1:size(Img, 3)
     % contour(x,y,x.*Img_frame)
     % hold on
     % quiver(x,y,vx,vy)
+    % colorbar
     % hold off
 
 
@@ -107,7 +113,7 @@ for frame = 1:size(Img, 3)
 
     % Level set evolution for FINDING INNER SKULL
     for n=1:iter_outer
-        % % Visualize the signed distance function
+        % Visualize the signed distance function
         % if(n == 1 || n == iter_outer || mod(n, 5) == 0)
         %     figure;
         %     imagesc(phi);
@@ -128,8 +134,8 @@ for frame = 1:size(Img, 3)
         drawnow;
     end
 
-    imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
-    contour(phi, [0, 0], 'r', 'LineWidth', 2); % Display the zero level contour in red
+    % imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
+    % contour(phi, [0, 0], 'r', 'LineWidth', 2); % Display the zero level contour in red
 
     % Extract the y-coordinates where phi is zero for each x-coordinate
     [rows, cols] = size(phi);
@@ -154,12 +160,12 @@ for frame = 1:size(Img, 3)
 
     x_with_max_width
 
-    % Plot vertical bar at the x-coordinate of the maximum width
-    hold on;
-    plot([x_with_max_width, x_with_max_width], [1, rows], 'b-', 'LineWidth', 3);
+    % % Plot vertical bar at the x-coordinate of the maximum width
+    % hold on;
+    % plot([x_with_max_width, x_with_max_width], [1, rows], 'b-', 'LineWidth', 2);
 
-    title(['Final zero level contour, Frame ', num2str(frame)]);
-    drawnow; % Refresh figure window
+    % title(['Final zero level contour', ', Max Width = ', num2str(max_width)]);
+    % drawnow; % Refresh figure window
 end
 
 % figure;

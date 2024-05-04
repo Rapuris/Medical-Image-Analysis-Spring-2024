@@ -50,8 +50,8 @@ for k=1:iter
     Ny=phi_y./(s+smallNumber);
     curvature=div(Nx,Ny);
 
-    % if mod(k, 5) == 0
-        % % {SHOW GRADIENT MAP %}
+    if mod(k, 5) == 0
+        % % {SHOW CURVATURE MAP %}
         % x = 1:size(phi, 2);
         % y = 1:size(phi, 1);
         % figure
@@ -59,17 +59,14 @@ for k=1:iter
         % hold on
         % quiver(x,y,phi_x,phi_y)
         % hold off
-    % end
+    end
     regularTerm=adaptedLevelSet(phi, vx, vy);  % MY FXN
     % diracPhi=Dirac(phi,epsilon);
     edgeTerm = findEdgeTerm(phi, curvature);  % MY FXN
 
-    % areaTerm=diracPhi.*g; % balloon/pressure force
-    % edgeTerm= diracPhi.*(vx.*Nx+vy.*Ny) + diracPhi.*g.*curvature;
-    % edgeTerm = diracPhi.*edgeTerm;
-    % delta_phi = edgeTerm .* (1 - regularTerm);
-    % phi=phi + timestep*(delta_phi);
-    phi=phi + timestep*(edgeTerm + regularTerm);
+    delta_phi = edgeTerm .* (1 - regularTerm);
+    phi=phi + timestep*(delta_phi);
+    % phi=phi + timestep*(edgeTerm + regularTerm);
 end
 
 function f = findEdgeTerm(phi, curvature)
@@ -97,6 +94,7 @@ vecY = Y - center(1);
 
 % Check the dot product
 dotProduct = vecX .* vx + vecY .* vy;
+s = sqrt(vx.^2 + vy.^2);
 
 % Initialize force function f
 contour = abs(phi) < 1;
@@ -106,9 +104,9 @@ f(contour) = 1;  % Set only dilated contour areas to one
     
 % Define shrinking factor when dot product is negative
 shrink_factor = 1;  % You can adjust this value based on desired speed or sensitivity of contraction
-log_response = f.*logsig(dotProduct * shrink_factor);
-log_response = imgaussfilt(log_response, 1);   
-f = log_response;
+response = f.*logsig(dotProduct * shrink_factor);
+response = imgaussfilt(response, 1);   
+f = response;
 
 
 

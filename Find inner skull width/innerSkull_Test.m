@@ -128,9 +128,38 @@ for frame = 1:size(Img, 3)
         drawnow;
     end
 
-    
+    imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
+    contour(phi, [0, 0], 'r', 'LineWidth', 2); % Display the zero level contour in red
 
+    % Extract the y-coordinates where phi is zero for each x-coordinate
+    [rows, cols] = size(phi);
+    max_width = 0;
+    x_with_max_width = 0;
 
+    for x = 1:cols
+        % Calculate the sign of phi for each element in the column
+        phi_signs = sign(phi(:, x));
+        % Find indices where the sign changes between consecutive elements
+        sign_changes = find(diff(phi_signs) ~= 0);
+
+        if ~isempty(sign_changes)
+            % Calculate the width as the difference between the maximum and minimum indices of sign change
+            width = max(sign_changes) - min(sign_changes);
+            if width > max_width
+                max_width = width;
+                x_with_max_width = x;
+            end
+        end
+    end
+
+    x_with_max_width
+
+    % Plot vertical bar at the x-coordinate of the maximum width
+    hold on;
+    plot([x_with_max_width, x_with_max_width], [1, rows], 'b-', 'LineWidth', 3);
+
+    title(['Final zero level contour, Frame ', num2str(frame)]);
+    drawnow; % Refresh figure window
 end
 
 % figure;

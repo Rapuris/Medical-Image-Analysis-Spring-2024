@@ -99,7 +99,7 @@ vecY = Y - center(1);
 dotProduct = vecX .* vx + vecY .* vy;
 
 % Initialize force function f
-contour = abs(phi) < 1.5;
+contour = abs(phi) < 1;
 
 f = zeros(size(phi));  % Set everything to zero
 f(contour) = 1;  % Set only dilated contour areas to one
@@ -129,31 +129,3 @@ g = f;
 g([1 nrow],[1 ncol]) = g([3 nrow-2],[3 ncol-2]);  
 g([1 nrow],2:end-1) = g([3 nrow-2],2:end-1);          
 g(2:end-1,[1 ncol]) = g(2:end-1,[3 ncol-2]);  
-
-
-
-
-% minDot = min(dotProduct(:));
-% maxDot = max(dotProduct(:));
-% midPoint = 0.5;  % Midpoint for zero dot product
-
-% % Scale the dot product to [0, 1] with 0.5 as midpoint for zero
-% dotProductImage = (dotProduct + maxDot)/(2*maxDot);  % Normalization
-% % dotProductImage = dotProductImage * (1 - 2*midPoint) + midPoint;  % Adjust to include a midpoint of 0.5
-
-
-% % Display the dot product image
-% figure; % Open a new figure window
-% imshow(dotProductImage, []); % Show the image
-% colormap(jet); % Use a colormap to better visualize the values
-% colorbar; % Add a colorbar to indicate scaling
-% title('Dot Product Image'); % Title the figure
-% % Mask where dot product is negative
-% mask = dotProduct > 0;
-
-% % Adjust gradients based on the mask
-% vx_masked = vx .* mask;
-% vy_masked = vy .* mask;
-
-% % Compute divergence using masked gradients
-% f = div(dps .* vx_masked - vx_masked, dps .* vy_masked - vy_masked) + 4 * del2(phi);

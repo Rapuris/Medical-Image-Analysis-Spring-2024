@@ -7,19 +7,12 @@ close all;
 
 % Load NIfTI file
 filename = 'subject_11_t1w_aligned_register.nii'; % specify your NIfTI file name here
-outputFilename = strrep(filename, '.nii', 'inner_skull.nii'); % Modified filename for output
-
-
-info = niftiinfo(filename); % get info from the original file for output
 
 % Read NIfTI file
 Img = niftiread(filename); % reads NIfTI image
 Img(Img < 100) = 0;
-    
 
-% Prepare matrix to store all contours
-contours = zeros(size(Img), 'like', Img); % Initialize with the same size and type as Img
-
+all_max_widths = zeros(size(Img, 3), 1); % Initialize array to store max widths for each frame
 
 for frame = 1:size(Img, 3)
     Img_frame = double(Img(:, :, frame));
@@ -84,23 +77,54 @@ for frame = 1:size(Img, 3)
 
     phi = initialLSF;
 
-
     % Level set evolution for FINDING INNER SKULL
     for n=1:iter_outer
         phi = innerSkull(phi, Img_smooth, lambda, mu, alfa, epsilon, timestep, iter_inner);
-        if mod(frame, 30) == 0
-            % Plot the updated contour
-            imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
-            hContour = contour(phi, [0, 0], 'r', 'LineWidth', 2);
-            % Update title
-            title(['Final zero level contour, Frame ', num2str(frame), ', Iteration ', num2str(n)]);
-            % Refresh figure window to show updates
-        drawnow;
-        end
+        % if mod(frame, 30) == 0
+        %     % Plot the updated contour
+        %     imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
+        %     hContour = contour(phi, [0, 0], 'r', 'LineWidth', 2);
+        %     % Update title
+        %     title(['Final zero level contour, Frame ', num2str(frame), ', Iteration ', num2str(n)]);
+        %     % Refresh figure window to show updates
+        % drawnow;
+        % end
     end
-    % Store the final contour of phi into the contours matrix
-    % Convert phi to binary where phi <= 0 is considered the contour
-    contours(:, :, frame) = abs(phi) < 1;
-end
 
-niftiwrite(contours, outputFilename, info);
+    if mod(frame, 5) == 0 % Update the display every 30 frames
+        imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
+        contour(phi, [0, 0], 'r', 'LineWidth', 2); % Display the zero level contour in red
+    
+        % Extract the y-coordinates where phi is zero for each x-coordinate
+        [rows, cols] = size(phi);
+        max_width = 0;
+        x_with_max_width = 0;
+    
+        for x = 1:cols
+            % Calculate the sign of phi for each element in the column
+            phi_signs = sign(phi(:, x));
+            % Find indices where the sign changes between consecutive elements
+            sign_changes = find(diff(phi_signs) ~= 0);
+    
+            if ~isempty(sign_changes)
+                % Calculate the width as the difference between the maximum and minimum indices of sign change
+                width = max(sign_changes) - min(sign_changes);
+                if width > max_width
+                    max_width = width;
+                    x_with_max_width = x;
+                end
+            end
+        end
+
+        all_max_widths(frame) = max_width; % Store the maximum width for this frame
+    
+        % Plot vertical bar at the x-coordinate of the maximum width
+        hold on;
+        plot([x_with_max_width, x_with_max_width], [1, rows], 'b-', 'LineWidth', 1);
+    
+        title(['Final zero level contour, Frame ', num2str(frame), ', Width = ', num2str(max_width)]);
+        drawnow; % Refresh figure window
+    end
+
+end
+max(all_max_widths)

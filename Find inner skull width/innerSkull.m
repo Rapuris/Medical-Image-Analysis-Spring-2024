@@ -1,4 +1,4 @@
-function phi = innerSkull(phi_0, g, lambda,mu, alfa, epsilon, timestep, iter)
+function phi = innerSkull(phi_0, g, timestep, iter, lambda)
 %  This Matlab code implements an edge-based active contour model as an
 %  application of the Distance Regularized Level Set Evolution (DRLSE) formulation in Li et al's paper:
 %
@@ -64,7 +64,7 @@ for k=1:iter
     % diracPhi=Dirac(phi,epsilon);
     edgeTerm = findEdgeTerm(phi, curvature);  % MY FXN
 
-    delta_phi = edgeTerm .* (1 - regularTerm);
+    delta_phi = lambda * edgeTerm .* (1 - regularTerm);
     phi=phi + timestep*(delta_phi);
     % phi=phi + timestep*(edgeTerm + regularTerm);
 end

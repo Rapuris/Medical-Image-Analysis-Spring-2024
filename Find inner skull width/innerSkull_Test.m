@@ -6,7 +6,7 @@ clear all;
 close all;
 
 % Load NIfTI file
-filename = 'subject_11_t1w_aligned_register.nii'; % specify your NIfTI file name here
+filename = 'subject_55_t1w_reg.nii.gz'; % specify your NIfTI file name here
 
 % Read NIfTI file
 Img = niftiread(filename); % reads NIfTI image
@@ -124,7 +124,7 @@ for frame = 1:size(Img, 3)
         %     axis off;
         % end
 
-        phi = innerSkull(phi, Img_smooth, lambda, mu, alfa, epsilon, timestep, iter_inner);
+        phi = innerSkull(phi, Img_smooth, timestep, iter_inner, 0.5);
         % Plot the updated contour
         imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
         hContour = contour(phi, [0, 0], 'r', 'LineWidth', 2);

@@ -6,7 +6,8 @@ clear all;
 close all;
 
 % Load NIfTI file
-filename = 'subject_11_t1w_aligned_register.nii'; % specify your NIfTI file name here
+% filename = 'stripped.nii'; % specify your NIfTI file name here
+filename = 'subject_11_t1w_aligned_register.nii';
 
 % Read NIfTI file
 Img = niftiread(filename); % reads NIfTI image
@@ -54,7 +55,7 @@ for frame = 1:size(Img, 3)
     phi = initialLSF;
     % Level set evolution for FINDING OUTER SKULL
     for n=1:iter_outer
-        phi = drlse_edge(phi, g, lambda, mu, alfa, epsilon, timestep, iter_inner, 'double-well');
+        phi = drlse_edge(phi, g, lambda, mu, alfa, epsilon, timestep, 2*iter_inner, 'double-well');
     
     end
 

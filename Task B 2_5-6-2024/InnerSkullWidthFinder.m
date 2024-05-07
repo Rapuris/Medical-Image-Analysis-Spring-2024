@@ -8,20 +8,27 @@ OUT: int for max width of inner skull
 %}
 
 function max_width = InnerSkullWidthFinder(filename)
-    clear all;
-    close all;
-
     % Load NIfTI file
     % filename = 'stripped.nii'; % specify your NIfTI file name here
     % filename = 'subject_55_t1w_reg.nii.gz';
 
     % Read NIfTI file
     Img = niftiread(filename); % reads NIfTI image
+    info = niftiinfo(filename); % Read the header information for writing later
     Img(Img < 100) = 0;
 
     all_max_widths = zeros(size(Img, 3), 1); % Initialize array to store max widths for each frame
 
     zeroLevelSetImg = false(size(Img)); % Initialize binary 3D image for zero level set
+
+    % Convert logical image to numeric type before writing to NIfTI
+    numericZeroLevelSetImg = uint8(zeroLevelSetImg);
+
+
+    % Define the output filename dynamically based on the input filename    
+    [path, name, ~] = fileparts(filename);  % Extract path and name without extension
+    outputFilename = fullfile(path, [name '_zero_level_set.nii']);  % Append suffix and re-add extension
+
 
     for frame = 1:size(Img, 3)
         Img_frame = double(Img(:, :, frame));
@@ -103,9 +110,9 @@ function max_width = InnerSkullWidthFinder(filename)
         % Update binary image for zero level set
         zeroLevelSetImg(:, :, frame) = phi <= 0; % Capture the zero level set for this frame
 
-        if mod(frame, 30) == 0 % Update the display every 30 frames
-            imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
-            contour(phi, [0, 0], 'r', 'LineWidth', 2); % Display the zero level contour in red
+        % if mod(frame, 30) == 0 % Update the display every 30 frames
+            % imagesc(Img_frame, [0, 1000]); axis off; axis equal; colormap(gray); hold on;
+            % contour(phi, [0, 0], 'r', 'LineWidth', 2); % Display the zero level contour in red
         
             % Extract the y-coordinates where phi is zero for each x-coordinate
             [rows, cols] = size(phi);
@@ -130,18 +137,18 @@ function max_width = InnerSkullWidthFinder(filename)
 
             all_max_widths(frame) = max_width; % Store the maximum width for this frame
         
-            % Plot vertical bar at the x-coordinate of the maximum width
-            hold on;
-            plot([x_with_max_width, x_with_max_width], [1, rows], 'b-', 'LineWidth', 1);
+            % % Plot vertical bar at the x-coordinate of the maximum width
+            % hold on;
+            % plot([x_with_max_width, x_with_max_width], [1, rows], 'b-', 'LineWidth', 1);
         
-            title(['Final zero level contour, Frame ', num2str(frame), ', Width = ', num2str(max_width)]);
-            drawnow; % Refresh figure window
-        end
+            % title(['Final zero level contour, Frame ', num2str(frame), ', Width = ', num2str(max_width)]);
+            % drawnow; % Refresh figure window
+        % end
 
     end
 
-    outputFilename = 'zero_level_set.nii'; % Define the output filename
-    niftiwrite(zeroLevelSetImg, outputFilename, info); % Write using original header info
+    % Write the numeric image to a NIfTI file
+    % niftiwrite(numericZeroLevelSetImg, outputFilename, info);  % Use the original header info for compatibility
 
 
     max_width = max(all_max_widths);

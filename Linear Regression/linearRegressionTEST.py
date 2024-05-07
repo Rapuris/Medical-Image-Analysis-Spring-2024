@@ -29,6 +29,7 @@ t2w_slice[t2w_slice < 0] = 0
 t1w_flat = t1w_slice.ravel()
 t2w_flat = t2w_slice.ravel()
 
+
 # Prepare the data for regression including pixel positions
 # Generate grid of pixel positions
 x_positions, y_positions = np.meshgrid(np.arange(t1w_slice.shape[1]), np.arange(t1w_slice.shape[0]))

@@ -1,0 +1,41 @@
+Version: 2.2.0+a000faa
+Log file for segmentation FastSurferCNN/run_prediction.py
+Tue May  7 09:47:43 EDT 2024
+
+/opt/anaconda3/envs/MIA_MRI/bin/python /Users/sampathrapuri/Desktop/fast/FastSurfer/FastSurferCNN/run_prediction.py --t1 /Users/sampathrapuri/Desktop/fast/partC_fr/subject_9_t1w_aligned_register.nii --asegdkt_segfile /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/aparc.DKTatlas+aseg.deep.mgz --conformed_name /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/orig.mgz --brainmask_name /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/mask.mgz --aseg_name /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/aseg.auto_noCCseg.mgz --sid 9 --seg_log /Users/sampathrapuri/Desktop/fast/MIA_test/9/scripts/deep-seg.log --vox_size min --batch_size 1 --viewagg_device auto --device auto 
+[INFO: run_prediction.py:  546]: Checking or downloading default checkpoints ...
+[INFO: common.py:  111]: Using device: mps
+[INFO: common.py:  111]: Using viewagg_device: mps
+[INFO: run_prediction.py:  234]: Running view aggregation on mps
+[INFO: inference.py:  200]: Loading checkpoint /Users/sampathrapuri/Desktop/fast/FastSurfer/checkpoints/aparc_vinn_coronal_v2.0.0.pkl
+[INFO: inference.py:  200]: Loading checkpoint /Users/sampathrapuri/Desktop/fast/FastSurfer/checkpoints/aparc_vinn_sagittal_v2.0.0.pkl
+[INFO: inference.py:  200]: Loading checkpoint /Users/sampathrapuri/Desktop/fast/FastSurfer/checkpoints/aparc_vinn_axial_v2.0.0.pkl
+[INFO: common.py:  820]: Single subject with absolute file path for input.
+[INFO: common.py:  833]: No subjects directory specified, but the parent directory of the output file /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/aparc.DKTatlas+aseg.deep.mgz is 'mri', so we are assuming this is the 'mri' folder in the subject directory.
+[INFO: common.py:  875]: Analyzing single subject /Users/sampathrapuri/Desktop/fast/partC_fr/subject_9_t1w_aligned_register.nii
+[INFO: common.py:  970]: Output will be stored in Subjects Directory: /Users/sampathrapuri/Desktop/fast/MIA_test
+[INFO: run_prediction.py:  310]: Successfully loaded image from /Users/sampathrapuri/Desktop/fast/partC_fr/subject_9_t1w_aligned_register.nii.
+[INFO: run_prediction.py:  418]: Output image directory 001.mgz does not exist. Creating it now...
+[INFO: run_prediction.py:  430]: Successfully saved image   as /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/orig/001.mgz.
+[INFO: run_prediction.py:  323]: Conforming image
+[INFO: run_prediction.py:  430]: Successfully saved image   as /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/orig.mgz.
+[INFO: run_prediction.py:  381]: Run coronal prediction
+[INFO: dataset.py:   76]: Loading Coronal with input voxelsize (1.0, 1.0)
+[INFO: inference.py:  352]: Inference on 256 batches for coronal successful
+[INFO: inference.py:  414]: Coronal inference on /Users/sampathrapuri/Desktop/fast/partC_fr/subject_9_t1w_aligned_register.nii finished in 5374.8650 seconds
+[INFO: run_prediction.py:  381]: Run sagittal prediction
+[INFO: dataset.py:   67]: Loading Sagittal with input voxelsize (1.0, 1.0)
+[INFO: inference.py:  352]: Inference on 256 batches for sagittal successful
+[INFO: inference.py:  414]: Sagittal inference on /Users/sampathrapuri/Desktop/fast/partC_fr/subject_9_t1w_aligned_register.nii finished in 125.9140 seconds
+[INFO: run_prediction.py:  381]: Run axial prediction
+[INFO: dataset.py:   72]: Loading Axial with input voxelsize (1.0, 1.0)
+[INFO: inference.py:  352]: Inference on 256 batches for axial successful
+[INFO: inference.py:  414]: Axial inference on /Users/sampathrapuri/Desktop/fast/partC_fr/subject_9_t1w_aligned_register.nii finished in 121.2522 seconds
+[INFO: run_prediction.py:  430]: Successfully saved image   as /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/aparc.DKTatlas+aseg.deep.mgz.
+[INFO: run_prediction.py:  584]: Creating brainmask based on segmentation...
+[INFO: run_prediction.py:  430]: Successfully saved image   as /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/mask.mgz.
+[INFO: run_prediction.py:  601]: Creating aseg based on segmentation...
+[INFO: run_prediction.py:  430]: Successfully saved image   as /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/aseg.auto_noCCseg.mgz.
+[INFO: run_prediction.py:  618]: Running volume-based QC check on segmentation...
+INFO: Running N4 bias-field correction
+/opt/anaconda3/envs/MIA_MRI/bin/python /Users/sampathrapuri/Desktop/fast/FastSurfer/recon_surf/N4_bias_correct.py --in /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/orig.mgz --rescale /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/orig_nu.mgz --aseg /Users/sampathrapuri/Desktop/fast/MIA_test/9/mri/aparc.DKTatlas+aseg.deep.mgz --threads 1

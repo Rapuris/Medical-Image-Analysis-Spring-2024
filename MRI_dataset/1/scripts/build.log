@@ -1,0 +1,3 @@
+/Users/sampathrapuri/Desktop/fast/FastSurfer/run_fastsurfer.sh --t1 /Users/sampathrapuri/Desktop/fast/partC_fr/subject_1_t1w_aligned_register.nii --sd /Users/sampathrapuri/Desktop/fast/MIA_test --sid 1 --seg_only
+Tue, 07 May 2024 02:28:31 -0400
+2.2.0+a000faa

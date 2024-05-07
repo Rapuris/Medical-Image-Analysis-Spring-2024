@@ -1,0 +1,6 @@
+/Users/sampathrapuri/Desktop/fast/FastSurfer/run_fastsurfer.sh --t1 /Users/sampathrapuri/Desktop/fast/MIA_test/subject_54_t1w_reg.nii.gz --sd /Users/sampathrapuri/Desktop/fast/MIA_test --sid 54 --seg_only
+Mon, 06 May 2024 23:11:45 -0400
+2.2.0+a000faa
+/Users/sampathrapuri/Desktop/fast/FastSurfer/run_fastsurfer.sh --t1 /Users/sampathrapuri/Desktop/fast/MIA_test/subject_54_t1w_reg.nii.gz --sd /Users/sampathrapuri/Desktop/fast/MIA_test --sid 54 --seg_only
+Mon, 06 May 2024 23:15:42 -0400
+2.2.0+a000faa
